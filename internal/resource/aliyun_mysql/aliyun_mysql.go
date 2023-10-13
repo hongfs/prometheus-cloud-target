@@ -12,7 +12,6 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"sync"
 )
 
 type AliyunMySQL struct {
@@ -44,20 +43,18 @@ func (a *AliyunMySQL) GetInstances() ([]resource.InstanceInfo, error) {
 		return nil, err
 	}
 
-	wg := new(sync.WaitGroup)
+	wg := threading.NewRoutineGroup()
 
 	ch := make(chan bool, 20)
 
 	for i, item := range list {
-		wg.Add(1)
 		ch <- true
 
 		i := i
 		item := item
 
-		threading.GoSafe(func() {
+		wg.Run(func() {
 			defer func() {
-				wg.Done()
 				<-ch
 			}()
 
