@@ -59,14 +59,26 @@ func (a *AliyunEcs) getInstances() ([]resource.InstanceInfo, error) {
 		}
 
 		for _, item := range result.Body.Instances.Instance {
-			if len(item.PublicIpAddress.IpAddress) == 0 {
-				continue
+			ipAddress := ""
+
+			if a.GetIPType() == "public" {
+				if len(item.PublicIpAddress.IpAddress) == 0 {
+					continue
+				}
+
+				ipAddress = *item.PublicIpAddress.IpAddress[0]
+			} else {
+				if len(item.VpcAttributes.PrivateIpAddress.IpAddress) == 0 {
+					continue
+				}
+
+				ipAddress = *item.VpcAttributes.PrivateIpAddress.IpAddress[0]
 			}
 
 			list = append(list, resource.InstanceInfo{
 				Type:          resource.EcsInstanceType,
 				ID:            *item.InstanceId,
-				PublicAddress: *item.PublicIpAddress.IpAddress[0],
+				PublicAddress: ipAddress,
 				PublicPort:    9100,
 			})
 		}
@@ -82,12 +94,12 @@ func (a *AliyunEcs) getInstances() ([]resource.InstanceInfo, error) {
 	return list, nil
 }
 
-func (a *AliyunEcs) GetUsername() string {
-	return os.Getenv("MYSQL_USERNAME")
-}
+func (a *AliyunEcs) GetIPType() string {
+	if os.Getenv("ALIYUN_PUBLIC_IP") == "0" {
+		return "private"
+	}
 
-func (a *AliyunEcs) GetPassword() string {
-	return os.Getenv("MYSQL_PASSWORD")
+	return "public"
 }
 
 func (a *AliyunEcs) GetRegion() string {
