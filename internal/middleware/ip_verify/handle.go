@@ -11,7 +11,8 @@ import (
 func Handle() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if !verify(c) {
-			c.AbortWithStatus(http.StatusNotFound)
+			c.Status(http.StatusNotFound)
+			c.AbortWithStatus(c.Writer.Status())
 			return
 		}
 

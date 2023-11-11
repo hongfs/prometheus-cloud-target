@@ -6,6 +6,7 @@ import (
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/hongfs/prometheus-cloud-target/internal/handle/instance"
 	"github.com/hongfs/prometheus-cloud-target/internal/resource"
+	"github.com/zeromicro/go-zero/core/threading"
 	"log"
 	"net/http"
 	"os"
@@ -15,16 +16,18 @@ import (
 var mu = new(sync.Mutex)
 
 func Handle(c *gin.Context) {
-	err := handle(c)
+	threading.GoSafe(func() {
+		err := handle()
 
-	if err != nil {
-		log.Printf("handle error: %s", err.Error())
-	}
+		if err != nil {
+			log.Printf("handle error: %s", err.Error())
+		}
+	})
 
 	c.Status(http.StatusOK)
 }
 
-func handle(c *gin.Context) error {
+func handle() error {
 	mu.Lock()
 	defer mu.Unlock()
 
