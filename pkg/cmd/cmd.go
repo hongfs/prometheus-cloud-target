@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/hongfs/prometheus-cloud-target/internal/handle/reload"
 	"github.com/hongfs/prometheus-cloud-target/internal/handle/target"
+	"github.com/hongfs/prometheus-cloud-target/internal/middleware/ip_verify"
 	"github.com/hongfs/prometheus-cloud-target/internal/resource"
 	"github.com/zeromicro/go-zero/core/threading"
 	"time"
@@ -15,6 +16,8 @@ func Start(addr string) error {
 	threading.GoSafe(async)
 
 	r := gin.Default()
+
+	r.Use(ip_verify.Handle())
 
 	r.GET("/target", target.Handle)
 	r.GET("/-/reload", reload.Handle)
