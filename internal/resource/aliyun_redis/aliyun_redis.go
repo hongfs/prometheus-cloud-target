@@ -122,7 +122,9 @@ func (a *AliyunRedis) getInstancesInfo(info resource.InstanceInfo) (*resource.In
 	}
 
 	for _, network := range result.Body.NetInfoItems.InstanceNetInfo {
-		if *network.IPType != "Public" {
+		if *network.IPType == "Public" && a.GetIPType() != "public" {
+			continue
+		} else if *network.IPType == "Private" && a.GetIPType() != "private" {
 			continue
 		}
 
@@ -133,6 +135,10 @@ func (a *AliyunRedis) getInstancesInfo(info resource.InstanceInfo) (*resource.In
 	}
 
 	if info.PublicAddress == "" {
+		if a.GetIPType() == "private" {
+			return nil, errors.New("private address is empty for instance " + info.ID)
+		}
+
 		connectionPrefix := info.ID + random.RandString(4)
 
 		if len(connectionPrefix) > 40 {
@@ -213,6 +219,14 @@ func (a *AliyunRedis) GetUsername() string {
 
 func (a *AliyunRedis) GetPassword() string {
 	return os.Getenv("REDIS_PASSWORD")
+}
+
+func (a *AliyunRedis) GetIPType() string {
+	if os.Getenv("ALIYUN_PUBLIC_IP") == "0" {
+		return "private"
+	}
+
+	return "public"
 }
 
 func (a *AliyunRedis) GetRegion() string {

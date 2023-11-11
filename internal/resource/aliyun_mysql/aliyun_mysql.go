@@ -122,7 +122,9 @@ func (a *AliyunMySQL) getInstancesInfo(info resource.InstanceInfo) (*resource.In
 	}
 
 	for _, network := range result.Body.DBInstanceNetInfos.DBInstanceNetInfo {
-		if *network.IPType != "Public" {
+		if *network.IPType == "Public" && a.GetIPType() != "public" {
+			continue
+		} else if *network.IPType == "Private" && a.GetIPType() != "private" {
 			continue
 		}
 
@@ -133,6 +135,10 @@ func (a *AliyunMySQL) getInstancesInfo(info resource.InstanceInfo) (*resource.In
 	}
 
 	if info.PublicAddress == "" {
+		if a.GetIPType() == "private" {
+			return nil, errors.New("private address is empty for instance " + info.ID)
+		}
+
 		connectionPrefix := info.ID + random.RandString(4)
 
 		if len(connectionPrefix) > 40 {
@@ -211,6 +217,14 @@ func (a *AliyunMySQL) GetUsername() string {
 
 func (a *AliyunMySQL) GetPassword() string {
 	return os.Getenv("MYSQL_PASSWORD")
+}
+
+func (a *AliyunMySQL) GetIPType() string {
+	if os.Getenv("ALIYUN_PUBLIC_IP") == "0" {
+		return "private"
+	}
+
+	return "public"
 }
 
 func (a *AliyunMySQL) GetRegion() string {
