@@ -24,6 +24,10 @@ func Handle(c *gin.Context) {
 		}
 	})
 
+	if c == nil {
+		return
+	}
+
 	c.Status(http.StatusOK)
 }
 
