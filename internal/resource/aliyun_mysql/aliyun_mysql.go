@@ -20,11 +20,17 @@ type AliyunMySQL struct {
 
 func (a *AliyunMySQL) getClient() *rds20140815.Client {
 	if a.client == nil {
-		client, err := rds20140815.NewClient(&openapi.Config{
+		config := &openapi.Config{
 			AccessKeyId:     tea.String(os.Getenv("ALIYUN_ACCESS_KEY_ID")),
 			AccessKeySecret: tea.String(os.Getenv("ALIYUN_ACCESS_KEY_SECRET")),
-			Endpoint:        tea.String("rds.aliyuncs.com"),
-		})
+			RegionId:        tea.String(a.GetRegion()),
+		}
+
+		client, err := rds20140815.NewClient(config)
+
+		if a.GetIPType() == "private" {
+			config.Network = tea.String("vpc")
+		}
 
 		if err != nil {
 			panic("init client error:" + err.Error())

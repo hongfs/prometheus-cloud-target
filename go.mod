@@ -7,6 +7,7 @@ require (
 	github.com/alibabacloud-go/ecs-20140526/v3 v3.0.7
 	github.com/alibabacloud-go/r-kvstore-20150101/v3 v3.0.1
 	github.com/alibabacloud-go/rds-20140815/v3 v3.0.5
+	github.com/alibabacloud-go/swas-open-20200601 v1.1.1
 	github.com/alibabacloud-go/tea v1.1.19
 	github.com/duke-git/lancet/v2 v2.2.4
 	github.com/gin-gonic/gin v1.9.1
@@ -21,7 +22,7 @@ require (
 	github.com/alibabacloud-go/endpoint-util v1.1.0 // indirect
 	github.com/alibabacloud-go/openapi-util v0.1.0 // indirect
 	github.com/alibabacloud-go/tea-utils v1.3.1 // indirect
-	github.com/alibabacloud-go/tea-utils/v2 v2.0.1 // indirect
+	github.com/alibabacloud-go/tea-utils/v2 v2.0.4 // indirect
 	github.com/alibabacloud-go/tea-xml v1.1.2 // indirect
 	github.com/aliyun/credentials-go v1.1.2 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
@@ -45,6 +46,8 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.9 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.718 // indirect
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.718 // indirect
 	github.com/tjfoc/gmsm v1.3.2 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect

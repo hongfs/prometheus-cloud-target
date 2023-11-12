@@ -20,11 +20,17 @@ type AliyunRedis struct {
 
 func (a *AliyunRedis) getClient() *rkvstore20150101.Client {
 	if a.client == nil {
-		client, err := rkvstore20150101.NewClient(&openapi.Config{
+		config := &openapi.Config{
 			AccessKeyId:     tea.String(os.Getenv("ALIYUN_ACCESS_KEY_ID")),
 			AccessKeySecret: tea.String(os.Getenv("ALIYUN_ACCESS_KEY_SECRET")),
 			RegionId:        tea.String(a.GetRegion()),
-		})
+		}
+
+		client, err := rkvstore20150101.NewClient(config)
+
+		if a.GetIPType() == "private" {
+			config.Network = tea.String("vpc")
+		}
 
 		if err != nil {
 			panic("init client error:" + err.Error())
