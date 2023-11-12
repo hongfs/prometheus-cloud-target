@@ -27,7 +27,7 @@ func (a *AliyunEcs) getClient() *ecs20140526.Client {
 		client, err := ecs20140526.NewClient(config)
 
 		if err != nil {
-			panic("init client error:" + err.Error())
+			panic("create aliyun ecs client error:" + err.Error())
 		}
 
 		a.client = client

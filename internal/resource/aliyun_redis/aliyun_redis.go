@@ -33,7 +33,7 @@ func (a *AliyunRedis) getClient() *rkvstore20150101.Client {
 		}
 
 		if err != nil {
-			panic("init client error:" + err.Error())
+			panic("create aliyun redis client error:" + err.Error())
 		}
 
 		a.client = client

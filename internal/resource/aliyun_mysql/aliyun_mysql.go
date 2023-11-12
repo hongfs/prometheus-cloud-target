@@ -33,7 +33,7 @@ func (a *AliyunMySQL) getClient() *rds20140815.Client {
 		}
 
 		if err != nil {
-			panic("init client error:" + err.Error())
+			panic("create aliyun mysql client error:" + err.Error())
 		}
 
 		a.client = client

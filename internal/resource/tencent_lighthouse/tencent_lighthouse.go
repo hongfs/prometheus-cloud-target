@@ -16,8 +16,8 @@ type TencentLighthouse struct {
 func (t *TencentLighthouse) getClient() *lighthouse.Client {
 	if t.client == nil {
 		credential := common.NewCredential(
-			os.Getenv("ALIYUN_ACCESS_KEY_ID"),
-			os.Getenv("ALIYUN_ACCESS_KEY_SECRET"),
+			os.Getenv("TENCENT_ACCESS_KEY_ID"),
+			os.Getenv("TENCENT_ACCESS_KEY_SECRET"),
 		)
 
 		cpf := profile.NewClientProfile()
