@@ -1,6 +1,7 @@
 package aliyun_swas
 
 import (
+	"fmt"
 	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
 	swasopen20200601 "github.com/alibabacloud-go/swas-open-20200601/client"
 	"github.com/alibabacloud-go/tea/tea"
@@ -18,16 +19,13 @@ func (a *AliyunSwas) getClient() *swasopen20200601.Client {
 			AccessKeyId:     tea.String(os.Getenv("ALIYUN_ACCESS_KEY_ID")),
 			AccessKeySecret: tea.String(os.Getenv("ALIYUN_ACCESS_KEY_SECRET")),
 			RegionId:        tea.String(a.GetRegion()),
+			Endpoint:        tea.String(fmt.Sprintf("swas.%s.aliyuncs.com", a.GetRegion())),
 		}
 
 		client, err := swasopen20200601.NewClient(config)
 
-		if a.GetIPType() == "private" {
-			config.Network = tea.String("vpc")
-		}
-
 		if err != nil {
-			panic("init client error:" + err.Error())
+			panic("create aliyun swas client error:" + err.Error())
 		}
 
 		a.client = client
