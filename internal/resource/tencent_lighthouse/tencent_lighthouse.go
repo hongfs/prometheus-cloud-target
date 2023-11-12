@@ -20,7 +20,9 @@ func (t *TencentLighthouse) getClient() *lighthouse.Client {
 			os.Getenv("ALIYUN_ACCESS_KEY_SECRET"),
 		)
 
-		client, err := lighthouse.NewClient(credential, t.GetRegion(), profile.NewClientProfile())
+		cpf := profile.NewClientProfile()
+
+		client, err := lighthouse.NewClient(credential, t.GetRegion(), cpf)
 
 		if err != nil {
 			panic("init client error:" + err.Error())
