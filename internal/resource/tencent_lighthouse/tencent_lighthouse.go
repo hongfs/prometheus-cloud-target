@@ -4,6 +4,7 @@ import (
 	"github.com/alibabacloud-go/tea/tea"
 	"github.com/hongfs/prometheus-cloud-target/internal/resource"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 	"os"
 )
@@ -19,7 +20,7 @@ func (t *TencentLighthouse) getClient() *lighthouse.Client {
 			os.Getenv("ALIYUN_ACCESS_KEY_SECRET"),
 		)
 
-		client, err := lighthouse.NewClient(credential, t.GetRegion(), nil)
+		client, err := lighthouse.NewClient(credential, t.GetRegion(), profile.NewClientProfile())
 
 		if err != nil {
 			panic("init client error:" + err.Error())
