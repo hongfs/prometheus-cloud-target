@@ -21,6 +21,7 @@ func (t *TencentLighthouse) getClient() *lighthouse.Client {
 		)
 
 		cpf := profile.NewClientProfile()
+		cpf.HttpProfile.Endpoint = "lighthouse.tencentcloudapi.com"
 
 		client, err := lighthouse.NewClient(credential, t.GetRegion(), cpf)
 
