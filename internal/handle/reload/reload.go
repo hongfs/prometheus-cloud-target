@@ -1,7 +1,6 @@
 package reload
 
 import (
-	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/hongfs/prometheus-cloud-target/internal/handle/instance"
@@ -63,7 +62,7 @@ func handle() error {
 	}
 
 	if _, ok := data["client"]; !ok {
-		return errors.New("no instance")
+		return nil
 	}
 
 	content, err := gjson.Marshal(data)
