@@ -25,7 +25,7 @@ func (t *TencentLighthouse) getClient() *lighthouse.Client {
 		client, err := lighthouse.NewClient(credential, t.GetRegion(), cpf)
 
 		if err != nil {
-			panic("init client error:" + err.Error())
+			panic("create tencent lighthouse client error:" + err.Error())
 		}
 
 		t.client = client
@@ -34,17 +34,17 @@ func (t *TencentLighthouse) getClient() *lighthouse.Client {
 	return t.client
 }
 
-func (a *TencentLighthouse) GetInstances() ([]resource.InstanceInfo, error) {
-	return a.getInstances()
+func (t *TencentLighthouse) GetInstances() ([]resource.InstanceInfo, error) {
+	return t.getInstances()
 }
 
-func (a *TencentLighthouse) getInstances() ([]resource.InstanceInfo, error) {
+func (t *TencentLighthouse) getInstances() ([]resource.InstanceInfo, error) {
 	list := make([]resource.InstanceInfo, 0)
 
 	page := 1
 
 	for {
-		result, err := a.getClient().DescribeInstances(&lighthouse.DescribeInstancesRequest{
+		result, err := t.getClient().DescribeInstances(&lighthouse.DescribeInstancesRequest{
 			Limit:  tea.Int64(100),
 			Offset: tea.Int64(int64(page * 100)),
 		})
@@ -58,7 +58,7 @@ func (a *TencentLighthouse) getInstances() ([]resource.InstanceInfo, error) {
 
 			ipAddress := ""
 
-			if a.GetIPType() == "public" {
+			if t.GetIPType() == "public" {
 				if len(item.PublicAddresses) == 0 {
 					continue
 				}
