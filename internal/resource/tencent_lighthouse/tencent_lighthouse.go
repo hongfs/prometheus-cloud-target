@@ -44,10 +44,11 @@ func (t *TencentLighthouse) getInstances() ([]resource.InstanceInfo, error) {
 	page := 1
 
 	for {
-		result, err := t.getClient().DescribeInstances(&lighthouse.DescribeInstancesRequest{
-			Limit:  tea.Int64(100),
-			Offset: tea.Int64(int64(page * 100)),
-		})
+		request := lighthouse.NewDescribeInstancesRequest()
+		request.Limit = tea.Int64(100)
+		request.Offset = tea.Int64(int64(page * 100))
+
+		result, err := t.getClient().DescribeInstances(request)
 
 		if err != nil {
 			return nil, err
