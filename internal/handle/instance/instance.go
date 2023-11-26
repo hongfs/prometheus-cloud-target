@@ -9,6 +9,7 @@ import (
 	"github.com/hongfs/prometheus-cloud-target/internal/resource/tencent_lighthouse"
 	"github.com/zeromicro/go-zero/core/threading"
 	"log"
+	"os"
 	"sync"
 )
 
@@ -22,7 +23,13 @@ func Load() ([]resource.InstanceInfo, error) {
 		&aliyun_mysql.AliyunMySQL{},
 		&aliyun_redis.AliyunRedis{},
 		&aliyun_swas.AliyunSwas{},
-		&tencent_lighthouse.TencentLighthouse{},
+	}
+
+	if os.Getenv("TENCENT_ENABLE") == "1" {
+		services = append(
+			services,
+			&tencent_lighthouse.TencentLighthouse{},
+		)
 	}
 
 	mu := new(sync.Mutex)
