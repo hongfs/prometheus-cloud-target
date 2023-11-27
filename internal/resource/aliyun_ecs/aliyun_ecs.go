@@ -3,6 +3,7 @@ package aliyun_ecs
 import (
 	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
 	ecs20140526 "github.com/alibabacloud-go/ecs-20140526/v3/client"
+	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
 	"github.com/hongfs/prometheus-cloud-target/internal/resource"
 	"os"
@@ -46,7 +47,7 @@ func (a *AliyunEcs) getInstances() ([]resource.InstanceInfo, error) {
 	var next *string
 
 	for {
-		result, err := a.getClient().DescribeInstances(&ecs20140526.DescribeInstancesRequest{
+		result, err := a.getClient().DescribeInstancesWithOptions(&ecs20140526.DescribeInstancesRequest{
 			RegionId:            tea.String(a.GetRegion()),
 			InstanceNetworkType: tea.String("vpc"),
 			Status:              tea.String("Running"),
@@ -58,6 +59,9 @@ func (a *AliyunEcs) getInstances() ([]resource.InstanceInfo, error) {
 				},
 			},
 			NextToken: next,
+		}, &util.RuntimeOptions{
+			Autoretry:   tea.Bool(true),
+			MaxAttempts: tea.Int(3),
 		})
 
 		if err != nil {

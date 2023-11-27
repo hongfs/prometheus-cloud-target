@@ -5,6 +5,7 @@ import (
 	"fmt"
 	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
 	rkvstore20150101 "github.com/alibabacloud-go/r-kvstore-20150101/v3/client"
+	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
 	"github.com/duke-git/lancet/v2/random"
 	"github.com/hongfs/prometheus-cloud-target/internal/resource"
@@ -86,7 +87,7 @@ func (a *AliyunRedis) getInstances() ([]resource.InstanceInfo, error) {
 	var page int32 = 1
 
 	for {
-		result, err := a.getClient().DescribeInstances(&rkvstore20150101.DescribeInstancesRequest{
+		result, err := a.getClient().DescribeInstancesWithOptions(&rkvstore20150101.DescribeInstancesRequest{
 			RegionId:       tea.String(a.GetRegion()),
 			InstanceStatus: tea.String("Normal"),
 			NetworkType:    tea.String("VPC"),
@@ -94,6 +95,9 @@ func (a *AliyunRedis) getInstances() ([]resource.InstanceInfo, error) {
 			PageSize:       tea.Int32(50),
 			Expired:        tea.String("false"),
 			GlobalInstance: tea.Bool(false),
+		}, &util.RuntimeOptions{
+			Autoretry:   tea.Bool(true),
+			MaxAttempts: tea.Int(3),
 		})
 
 		if err != nil {

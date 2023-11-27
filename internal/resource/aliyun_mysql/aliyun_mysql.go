@@ -5,6 +5,7 @@ import (
 	"fmt"
 	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
 	rds20140815 "github.com/alibabacloud-go/rds-20140815/v3/client"
+	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
 	"github.com/duke-git/lancet/v2/random"
 	"github.com/hongfs/prometheus-cloud-target/internal/resource"
@@ -86,13 +87,16 @@ func (a *AliyunMySQL) getInstances() ([]resource.InstanceInfo, error) {
 	var next *string
 
 	for {
-		result, err := a.getClient().DescribeDBInstances(&rds20140815.DescribeDBInstancesRequest{
+		result, err := a.getClient().DescribeDBInstancesWithOptions(&rds20140815.DescribeDBInstancesRequest{
 			RegionId:         tea.String(a.GetRegion()),
 			Engine:           tea.String("MySQL"),
 			DBInstanceStatus: tea.String("Running"),
 			DBInstanceType:   tea.String("Primary"),
 			PageSize:         tea.Int32(100),
 			NextToken:        next,
+		}, &util.RuntimeOptions{
+			Autoretry:   tea.Bool(true),
+			MaxAttempts: tea.Int(3),
 		})
 
 		if err != nil {

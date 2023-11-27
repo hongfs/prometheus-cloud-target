@@ -4,6 +4,7 @@ import (
 	"fmt"
 	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
 	swasopen20200601 "github.com/alibabacloud-go/swas-open-20200601/client"
+	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
 	"github.com/hongfs/prometheus-cloud-target/internal/resource"
 	"os"
@@ -44,11 +45,14 @@ func (a *AliyunSwas) getInstances() ([]resource.InstanceInfo, error) {
 	page := 1
 
 	for {
-		result, err := a.getClient().ListInstances(&swasopen20200601.ListInstancesRequest{
+		result, err := a.getClient().ListInstancesWithOptions(&swasopen20200601.ListInstancesRequest{
 			RegionId:   tea.String(a.GetRegion()),
 			Status:     tea.String("Running"),
 			PageSize:   tea.Int32(100),
 			PageNumber: tea.Int32(int32(page)),
+		}, &util.RuntimeOptions{
+			Autoretry:   tea.Bool(true),
+			MaxAttempts: tea.Int(3),
 		})
 
 		if err != nil {
