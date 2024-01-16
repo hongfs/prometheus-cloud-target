@@ -35,6 +35,11 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE
 
+          export GITHUB_SHA=$(curl https://tools.hongfs.cn/v2/random/image/id)
+
           docker build --no-cache -t $GITHUB_REPOSITORY:$GITHUB_REF_NAME .
           docker tag $GITHUB_REPOSITORY:$GITHUB_REF_NAME $REGISTRY/$GITHUB_REPOSITORY:$GITHUB_REF_NAME
           docker push $REGISTRY/$GITHUB_REPOSITORY:$GITHUB_REF_NAME
+
+          docker tag $GITHUB_REPOSITORY:$GITHUB_REF_NAME $REGISTRY/$GITHUB_REPOSITORY:$GITHUB_REF_NAME-$GITHUB_SHA
+          docker push $REGISTRY/$GITHUB_REPOSITORY:$GITHUB_REF_NAME-$GITHUB_SHA
