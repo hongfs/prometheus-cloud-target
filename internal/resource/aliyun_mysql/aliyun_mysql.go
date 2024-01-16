@@ -8,10 +8,10 @@ import (
 	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
 	"github.com/duke-git/lancet/v2/random"
+	"github.com/hongfs/prometheus-cloud-target/internal/common"
 	"github.com/hongfs/prometheus-cloud-target/internal/resource"
 	"github.com/zeromicro/go-zero/core/threading"
 	"log"
-	"os"
 	"strconv"
 )
 
@@ -22,8 +22,8 @@ type AliyunMySQL struct {
 func (a *AliyunMySQL) getClient() *rds20140815.Client {
 	if a.client == nil {
 		config := &openapi.Config{
-			AccessKeyId:     tea.String(os.Getenv("ALIYUN_ACCESS_KEY_ID")),
-			AccessKeySecret: tea.String(os.Getenv("ALIYUN_ACCESS_KEY_SECRET")),
+			AccessKeyId:     tea.String(common.Env("ALIYUN_ACCESS_KEY_ID")),
+			AccessKeySecret: tea.String(common.Env("ALIYUN_ACCESS_KEY_SECRET")),
 			RegionId:        tea.String(a.GetRegion()),
 		}
 
@@ -222,15 +222,15 @@ func (a *AliyunMySQL) getInstancesInfo(info resource.InstanceInfo) (*resource.In
 }
 
 func (a *AliyunMySQL) GetUsername() string {
-	return os.Getenv("MYSQL_USERNAME")
+	return common.Env("MYSQL_USERNAME")
 }
 
 func (a *AliyunMySQL) GetPassword() string {
-	return os.Getenv("MYSQL_PASSWORD")
+	return common.Env("MYSQL_PASSWORD")
 }
 
 func (a *AliyunMySQL) GetIPType() string {
-	if os.Getenv("ALIYUN_PUBLIC_IP") == "0" {
+	if common.Env("ALIYUN_PUBLIC_IP") == "0" {
 		return "private"
 	}
 
@@ -238,5 +238,5 @@ func (a *AliyunMySQL) GetIPType() string {
 }
 
 func (a *AliyunMySQL) GetRegion() string {
-	return os.Getenv("ALIYUN_REGION")
+	return common.Env("ALIYUN_REGION")
 }

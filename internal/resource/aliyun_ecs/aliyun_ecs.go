@@ -5,8 +5,8 @@ import (
 	ecs20140526 "github.com/alibabacloud-go/ecs-20140526/v3/client"
 	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
+	"github.com/hongfs/prometheus-cloud-target/internal/common"
 	"github.com/hongfs/prometheus-cloud-target/internal/resource"
-	"os"
 )
 
 type AliyunEcs struct {
@@ -16,8 +16,8 @@ type AliyunEcs struct {
 func (a *AliyunEcs) getClient() *ecs20140526.Client {
 	if a.client == nil {
 		config := &openapi.Config{
-			AccessKeyId:     tea.String(os.Getenv("ALIYUN_ACCESS_KEY_ID")),
-			AccessKeySecret: tea.String(os.Getenv("ALIYUN_ACCESS_KEY_SECRET")),
+			AccessKeyId:     tea.String(common.Env("ALIYUN_ACCESS_KEY_ID")),
+			AccessKeySecret: tea.String(common.Env("ALIYUN_ACCESS_KEY_SECRET")),
 			RegionId:        tea.String(a.GetRegion()),
 		}
 
@@ -105,7 +105,7 @@ func (a *AliyunEcs) getInstances() ([]resource.InstanceInfo, error) {
 }
 
 func (a *AliyunEcs) GetIPType() string {
-	if os.Getenv("ALIYUN_PUBLIC_IP") == "0" {
+	if common.Env("ALIYUN_PUBLIC_IP") == "0" {
 		return "private"
 	}
 
@@ -113,5 +113,5 @@ func (a *AliyunEcs) GetIPType() string {
 }
 
 func (a *AliyunEcs) GetRegion() string {
-	return os.Getenv("ALIYUN_REGION")
+	return common.Env("ALIYUN_REGION")
 }

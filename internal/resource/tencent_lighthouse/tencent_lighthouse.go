@@ -2,11 +2,11 @@ package tencent_lighthouse
 
 import (
 	"github.com/alibabacloud-go/tea/tea"
+	"github.com/hongfs/prometheus-cloud-target/internal/common"
 	"github.com/hongfs/prometheus-cloud-target/internal/resource"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	auth "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
-	"os"
 )
 
 type TencentLighthouse struct {
@@ -15,9 +15,9 @@ type TencentLighthouse struct {
 
 func (t *TencentLighthouse) getClient() *lighthouse.Client {
 	if t.client == nil {
-		credential := common.NewCredential(
-			os.Getenv("TENCENT_ACCESS_KEY_ID"),
-			os.Getenv("TENCENT_ACCESS_KEY_SECRET"),
+		credential := auth.NewCredential(
+			common.Env("TENCENT_ACCESS_KEY_ID"),
+			common.Env("TENCENT_ACCESS_KEY_SECRET"),
 		)
 
 		cpf := profile.NewClientProfile()
@@ -94,7 +94,7 @@ func (t *TencentLighthouse) getInstances() ([]resource.InstanceInfo, error) {
 }
 
 func (t *TencentLighthouse) GetIPType() string {
-	if os.Getenv("TENCENT_PUBLIC_IP") == "0" {
+	if common.Env("TENCENT_PUBLIC_IP") == "0" {
 		return "private"
 	}
 
@@ -102,5 +102,5 @@ func (t *TencentLighthouse) GetIPType() string {
 }
 
 func (t *TencentLighthouse) GetRegion() string {
-	return os.Getenv("TENCENT_REGION")
+	return common.Env("TENCENT_REGION")
 }

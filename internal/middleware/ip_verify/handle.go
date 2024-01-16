@@ -42,9 +42,11 @@ func verify(c *gin.Context) bool {
 			if cidr == ip {
 				return true
 			}
+
+			continue
 		}
 
-		_, ipNet, err := net.ParseCIDR("10.0.0.0/8")
+		_, ipNet, err := net.ParseCIDR(cidr)
 
 		if err != nil {
 			continue

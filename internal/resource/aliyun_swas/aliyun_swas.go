@@ -6,8 +6,8 @@ import (
 	swasopen20200601 "github.com/alibabacloud-go/swas-open-20200601/client"
 	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
+	"github.com/hongfs/prometheus-cloud-target/internal/common"
 	"github.com/hongfs/prometheus-cloud-target/internal/resource"
-	"os"
 )
 
 type AliyunSwas struct {
@@ -17,8 +17,8 @@ type AliyunSwas struct {
 func (a *AliyunSwas) getClient() *swasopen20200601.Client {
 	if a.client == nil {
 		config := &openapi.Config{
-			AccessKeyId:     tea.String(os.Getenv("ALIYUN_ACCESS_KEY_ID")),
-			AccessKeySecret: tea.String(os.Getenv("ALIYUN_ACCESS_KEY_SECRET")),
+			AccessKeyId:     tea.String(common.Env("ALIYUN_ACCESS_KEY_ID")),
+			AccessKeySecret: tea.String(common.Env("ALIYUN_ACCESS_KEY_SECRET")),
 			RegionId:        tea.String(a.GetRegion()),
 			Endpoint:        tea.String(fmt.Sprintf("swas.%s.aliyuncs.com", a.GetRegion())),
 		}
@@ -88,7 +88,7 @@ func (a *AliyunSwas) getInstances() ([]resource.InstanceInfo, error) {
 }
 
 func (a *AliyunSwas) GetIPType() string {
-	if os.Getenv("ALIYUN_PUBLIC_IP") == "0" {
+	if common.Env("ALIYUN_PUBLIC_IP") == "0" {
 		return "private"
 	}
 
@@ -96,5 +96,5 @@ func (a *AliyunSwas) GetIPType() string {
 }
 
 func (a *AliyunSwas) GetRegion() string {
-	return os.Getenv("ALIYUN_REGION")
+	return common.Env("ALIYUN_REGION")
 }

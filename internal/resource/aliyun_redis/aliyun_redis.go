@@ -8,10 +8,10 @@ import (
 	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
 	"github.com/duke-git/lancet/v2/random"
+	"github.com/hongfs/prometheus-cloud-target/internal/common"
 	"github.com/hongfs/prometheus-cloud-target/internal/resource"
 	"github.com/zeromicro/go-zero/core/threading"
 	"log"
-	"os"
 	"strconv"
 )
 
@@ -22,8 +22,8 @@ type AliyunRedis struct {
 func (a *AliyunRedis) getClient() *rkvstore20150101.Client {
 	if a.client == nil {
 		config := &openapi.Config{
-			AccessKeyId:     tea.String(os.Getenv("ALIYUN_ACCESS_KEY_ID")),
-			AccessKeySecret: tea.String(os.Getenv("ALIYUN_ACCESS_KEY_SECRET")),
+			AccessKeyId:     tea.String(common.Env("ALIYUN_ACCESS_KEY_ID")),
+			AccessKeySecret: tea.String(common.Env("ALIYUN_ACCESS_KEY_SECRET")),
 			RegionId:        tea.String(a.GetRegion()),
 		}
 
@@ -224,15 +224,15 @@ func (a *AliyunRedis) getInstancesInfo(info resource.InstanceInfo) (*resource.In
 }
 
 func (a *AliyunRedis) GetUsername() string {
-	return os.Getenv("REDIS_USERNAME")
+	return common.Env("REDIS_USERNAME")
 }
 
 func (a *AliyunRedis) GetPassword() string {
-	return os.Getenv("REDIS_PASSWORD")
+	return common.Env("REDIS_PASSWORD")
 }
 
 func (a *AliyunRedis) GetIPType() string {
-	if os.Getenv("ALIYUN_PUBLIC_IP") == "0" {
+	if common.Env("ALIYUN_PUBLIC_IP") == "0" {
 		return "private"
 	}
 
@@ -240,5 +240,5 @@ func (a *AliyunRedis) GetIPType() string {
 }
 
 func (a *AliyunRedis) GetRegion() string {
-	return os.Getenv("ALIYUN_REGION")
+	return common.Env("ALIYUN_REGION")
 }
