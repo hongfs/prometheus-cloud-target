@@ -1,15 +1,11 @@
 package common
 
 import (
-	"github.com/patrickmn/go-cache"
 	"io"
 	"net/http"
 	"os"
 	"regexp"
-	"time"
 )
-
-var configCache = cache.New(time.Minute*10, time.Second*1)
 
 func Env(name string) string {
 	value := os.Getenv(name)
@@ -26,10 +22,6 @@ func Env(name string) string {
 
 	if !ok {
 		return value
-	}
-
-	if v, ok := configCache.Get(value); ok {
-		return v.(string)
 	}
 
 	resp, err := http.Get(value)
@@ -49,8 +41,6 @@ func Env(name string) string {
 	if err != nil {
 		return value
 	}
-
-	configCache.Set(value, string(body), cache.DefaultExpiration)
 
 	return string(body)
 }
