@@ -72,11 +72,17 @@ func (a *AliyunEcs) getInstances() ([]resource.InstanceInfo, error) {
 			ipAddress := ""
 
 			if a.GetIPType() == "public" {
-				if len(item.PublicIpAddress.IpAddress) == 0 {
-					continue
+				if item.EipAddress != nil && item.EipAddress.IpAddress != nil {
+					ipAddress = *item.EipAddress.IpAddress
 				}
 
-				ipAddress = *item.PublicIpAddress.IpAddress[0]
+				if ipAddress == "" {
+					if len(item.PublicIpAddress.IpAddress) == 0 {
+						continue
+					}
+
+					ipAddress = *item.PublicIpAddress.IpAddress[0]
+				}
 			} else {
 				if len(item.VpcAttributes.PrivateIpAddress.IpAddress) == 0 {
 					continue
