@@ -40,6 +40,10 @@ func (t *TencentLighthouse) GetInstances() ([]resource.InstanceInfo, error) {
 }
 
 func (t *TencentLighthouse) getInstances() ([]resource.InstanceInfo, error) {
+	if common.Env("TENCENT_ACCESS_KEY_ID") == "" {
+		return nil, nil
+	}
+
 	list := make([]resource.InstanceInfo, 0)
 
 	offset := 0

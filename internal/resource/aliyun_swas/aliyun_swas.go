@@ -40,6 +40,10 @@ func (a *AliyunSwas) GetInstances() ([]resource.InstanceInfo, error) {
 }
 
 func (a *AliyunSwas) getInstances() ([]resource.InstanceInfo, error) {
+	if common.Env("ALIYUN_ACCESS_KEY_ID") == "" {
+		return nil, nil
+	}
+
 	list := make([]resource.InstanceInfo, 0)
 
 	page := 1

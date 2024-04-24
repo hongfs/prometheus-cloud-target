@@ -42,6 +42,10 @@ func (a *AliyunEcs) GetInstances() ([]resource.InstanceInfo, error) {
 }
 
 func (a *AliyunEcs) getInstances() ([]resource.InstanceInfo, error) {
+	if common.Env("ALIYUN_ACCESS_KEY_ID") == "" {
+		return nil, nil
+	}
+
 	list := make([]resource.InstanceInfo, 0)
 
 	var next *string

@@ -44,6 +44,10 @@ func (a *AliyunRedis) getClient() *rkvstore20150101.Client {
 }
 
 func (a *AliyunRedis) GetInstances() ([]resource.InstanceInfo, error) {
+	if common.Env("ALIYUN_ACCESS_KEY_ID") == "" {
+		return nil, nil
+	}
+
 	list, err := a.getInstances()
 
 	if err != nil {

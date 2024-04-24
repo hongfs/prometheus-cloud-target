@@ -44,6 +44,10 @@ func (a *AliyunMySQL) getClient() *rds20140815.Client {
 }
 
 func (a *AliyunMySQL) GetInstances() ([]resource.InstanceInfo, error) {
+	if common.Env("ALIYUN_ACCESS_KEY_ID") == "" {
+		return nil, nil
+	}
+
 	list, err := a.getInstances()
 
 	if err != nil {
